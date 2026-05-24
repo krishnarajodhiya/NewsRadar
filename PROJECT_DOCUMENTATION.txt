@@ -1,0 +1,419 @@
+================================================================================
+                    NEWSRADAR - FAKE NEWS DETECTION SYSTEM
+                         Project Documentation
+================================================================================
+
+PROJECT OVERVIEW
+================================================================================
+
+NewsRadar is a web-based fake news detection application that uses machine 
+learning to classify whether a given news article or headline is fake or real. 
+The application consists of a frontend user interface and a backend API powered 
+by an AI model trained on a large dataset of news articles.
+
+The system achieves 97.6% accuracy in detecting fake news using a Logistic 
+Regression model trained on 5,000 news samples (2,500 fake + 2,500 real) from 
+the Kaggle dataset.
+
+TECHNOLOGY STACK
+================================================================================
+
+FRONTEND:
+- HTML5, CSS3, Vanilla JavaScript (no framework dependencies)
+- Static website hosted on Vercel
+- Three main tabs: Predictor, Dashboard, History
+- Responsive design for desktop and mobile devices
+
+BACKEND:
+- Python 3.11.9
+- Flask 3.0.0 (Web framework)
+- Flask-CORS 4.0.0 (Cross-Origin Resource Sharing)
+- Gunicorn 21.2.0 (WSGI production server)
+- SQLite3 (Database for storing predictions)
+- Hosted on Railway
+
+MACHINE LEARNING:
+- scikit-learn 1.4.0 (ML library)
+- Logistic Regression (Classification algorithm)
+- TF-IDF Vectorizer (Text feature extraction)
+- NLTK 3.8.1 (Natural Language Toolkit for text preprocessing)
+- pandas 2.2.0 (Data processing)
+- numpy 1.26.0 (Numerical computing)
+
+VERSION CONTROL:
+- GitHub repository: https://github.com/krishnarajodhiya/NewsRadar
+
+HOW THE APPLICATION WORKS
+================================================================================
+
+1. USER SUBMITS A HEADLINE
+   - User enters news text in the "Predictor" tab
+   - Frontend validates input (minimum 10 characters)
+   - Text is sent to backend API endpoint
+
+2. BACKEND PROCESSING
+   - Text preprocessing: tokenization, lowercasing, stopword removal, lemmatization
+   - TF-IDF vectorization converts text to numerical features
+   - Pre-trained Logistic Regression model makes prediction
+
+3. PREDICTION RESULT
+   - Model returns: FAKE or REAL with confidence score (0-100%)
+   - Result is stored in SQLite database
+   - Response sent back to frontend as JSON
+
+4. FRONTEND DISPLAYS RESULT
+   - Shows prediction with confidence percentage
+   - Emoji indicator: ❌ for FAKE, ✅ for REAL
+   - Results can be viewed in History and Dashboard tabs
+
+FRONTEND FEATURES
+================================================================================
+
+1. PREDICTOR TAB
+   - Text input field for news headlines/articles
+   - Real-time character count display
+   - Submit button to send for prediction
+   - Results displayed with confidence score and emoji indicator
+   - Clear button to reset form
+
+2. DASHBOARD TAB
+   - Total predictions made
+   - Prediction statistics (count of FAKE vs REAL)
+   - Recent predictions list
+   - Live statistics that update as new predictions are made
+
+3. HISTORY TAB
+   - Complete list of all predictions made
+   - Sortable by prediction type
+   - Shows text, prediction result, confidence, and timestamp
+   - Pagination support (default: 50 results per page)
+   - Clear history option
+
+BACKEND API ENDPOINTS
+================================================================================
+
+1. POST /api/predict
+   - Input: JSON with "text" field
+   - Output: JSON with prediction, confidence, and message
+   - Example Request:
+     POST /api/predict
+     {"text": "Breaking news about latest discovery"}
+   
+   - Example Response:
+     {
+       "prediction": "FAKE",
+       "confidence": 86.5,
+       "message": "This news is predicted as FAKE with 86.5% confidence"
+     }
+
+2. GET /api/history
+   - Returns list of recent predictions
+   - Query param: limit (default: 10, max: 100)
+   - Returns JSON array with prediction records
+
+3. GET /api/dashboard
+   - Returns dashboard statistics
+   - Includes total predictions count
+   - FAKE vs REAL breakdown
+   - Recent predictions list
+
+4. POST /api/clear
+   - Clears all prediction history from database
+   - Returns success message
+
+5. GET /health
+   - Health check endpoint
+   - Returns {"status": "healthy", "message": "..."}
+
+MACHINE LEARNING MODEL DETAILS
+================================================================================
+
+MODEL ARCHITECTURE:
+- Algorithm: Logistic Regression
+- Feature Extraction: TF-IDF Vectorizer
+- Training Data: 5,000 news articles
+  * 2,500 fake news samples
+  * 2,500 real news samples
+- Source: Kaggle Fake and Real News Dataset
+
+MODEL PERFORMANCE:
+- Accuracy: 97.6%
+- Precision: 97.61%
+- Recall: 97.6%
+- F1-Score: 97.6%
+
+TEXT PREPROCESSING STEPS:
+1. Tokenization: Split text into words
+2. Lowercasing: Convert all text to lowercase
+3. Stopword Removal: Remove common words (the, is, at, etc.)
+4. Lemmatization: Reduce words to base form (running → run)
+5. TF-IDF Vectorization: Convert text to numerical features
+
+MODEL FILES:
+- model.pkl (40 KB) - Trained Logistic Regression model
+- vectorizer.pkl (11 MB) - Fitted TF-IDF vectorizer
+
+DATABASE STRUCTURE
+================================================================================
+
+Table: predictions
+
+Columns:
+- id (INTEGER PRIMARY KEY) - Auto-increment unique identifier
+- text (TEXT) - Original news text submitted
+- prediction (TEXT) - Model prediction (FAKE or REAL)
+- confidence (REAL) - Confidence score (0-100)
+- created_at (TIMESTAMP) - When prediction was made
+
+Example Record:
+ID | Text                                    | Prediction | Confidence | Timestamp
+1  | "Scientists discover cure for disease" | FAKE       | 86.5       | 2026-05-24 07:26:52
+
+DEPLOYMENT ARCHITECTURE
+================================================================================
+
+FRONTEND DEPLOYMENT (Vercel):
+- URL: https://news-radar-3zceckvy7-krishnarajodhiyas-projects.vercel.app
+- Platform: Vercel (serverless static hosting)
+- Configuration: vercel.json with SPA rewrites
+- Benefits: Fast CDN, automatic scaling, free tier available
+
+BACKEND DEPLOYMENT (Railway):
+- URL: https://newsradar-production.up.railway.app
+- Platform: Railway (containerized Python deployment)
+- Runtime: Python 3.11.9
+- Server: Gunicorn WSGI server
+- Benefits: Easy GitHub integration, automatic deployments, cost-effective
+
+DEPLOYMENT PROCESS:
+1. Push code to GitHub main branch
+2. Railway automatically detects Python project (via runtime.txt + requirements.txt)
+3. Installs dependencies from requirements.txt
+4. Starts Gunicorn server with pre-trained models
+5. Frontend fetches from deployed backend API
+
+KEY DEPLOYMENT CONSIDERATIONS:
+- Pre-trained models committed to Git (can't train during build due to time limits)
+- Database initializes on first request (for Gunicorn compatibility)
+- CORS enabled to allow frontend requests from Vercel domain
+- Environment-based configuration for different deployment scenarios
+
+HOW TO USE THE APPLICATION
+================================================================================
+
+STEP 1: ACCESS THE APPLICATION
+- Open browser and navigate to:
+  https://news-radar-3zceckvy7-krishnarajodhiyas-projects.vercel.app
+
+STEP 2: MAKE A PREDICTION
+- Go to "Predictor" tab
+- Enter a news headline or article text (minimum 10 characters)
+- Click "Predict" button
+- Wait for result
+
+STEP 3: VIEW RESULT
+- Result shows prediction (FAKE/REAL) with confidence percentage
+- Emoji indicator shows result type
+- Result is automatically saved to database
+
+STEP 4: CHECK STATISTICS
+- Click "Dashboard" tab to see statistics
+- Total predictions made
+- Breakdown of fake vs real predictions
+- Recent prediction history
+
+STEP 5: VIEW HISTORY
+- Click "History" tab to see all predictions
+- Paginate through results
+- Clear history if needed (POST /api/clear)
+
+ERROR HANDLING
+================================================================================
+
+1. Text Too Short
+   Error: "Text must be at least 10 characters long"
+   Solution: Enter a longer headline or article
+
+2. Model Not Found
+   Error: "Model not found. Please train the model first."
+   Solution: Ensure model.pkl and vectorizer.pkl files are present
+
+3. Database Errors
+   Error: "An error occurred during prediction"
+   Solution: Check database file permissions or reinitialize database
+
+4. API Connection Failed
+   Error: "Failed to fetch from backend"
+   Solution: Check backend URL in script.js, verify Railway service is running
+
+PROJECT FILE STRUCTURE
+================================================================================
+
+NewsRadar/
+├── index.html                 - Main frontend HTML
+├── script.js                  - Frontend JavaScript (API calls, UI logic)
+├── style.css                  - Frontend CSS styling
+├── backend/
+│   ├── __init__.py           - Package initializer for gunicorn
+│   ├── app.py                - Main Flask application and API endpoints
+│   ├── database.py           - SQLite database operations
+│   ├── preprocessor.py       - Text preprocessing functions
+│   └── train_model.py        - Model training script
+├── models/
+│   ├── model.pkl             - Trained Logistic Regression model
+│   └── vectorizer.pkl        - Fitted TF-IDF vectorizer
+├── data/
+│   └── predictions.db        - SQLite database file (created at runtime)
+├── frontend/
+│   ├── index.html            - Alternate frontend location
+│   ├── script.js             - Alternate script location
+│   └── style.css             - Alternate style location
+├── requirements.txt          - Python dependencies
+├── runtime.txt              - Python version specification
+├── Procfile                  - Heroku/Railway startup configuration
+├── vercel.json              - Vercel deployment configuration
+└── README.md                - Project documentation
+
+DEVELOPMENT & DEPLOYMENT COMMANDS
+================================================================================
+
+LOCAL DEVELOPMENT:
+1. Activate virtual environment:
+   source venv/bin/activate
+
+2. Install dependencies:
+   pip install -r backend/requirements.txt
+
+3. Run Flask development server:
+   python backend/app.py 5001
+
+4. Access frontend locally:
+   file:///Users/krishna_rajodhiya/Desktop/NewsRadar/index.html
+
+DEPLOYMENT:
+1. Push to GitHub:
+   git add .
+   git commit -m "Your message"
+   git push origin main
+
+2. Railway auto-deploys from GitHub:
+   - No manual command needed
+   - Check deployment at: https://railway.com
+
+3. Vercel auto-deploys frontend:
+   - Automatically triggers on push to main branch
+   - Available at deployed URL
+
+MANUAL DEPLOYMENT (if needed):
+   railway up -d          # Deploy to Railway
+   vercel deploy --prod   # Deploy to Vercel
+
+KEY FEATURES & ACHIEVEMENTS
+================================================================================
+
+✅ 97.6% Model Accuracy
+   - Trained on 5,000 samples from Kaggle dataset
+   - Balanced dataset (2,500 fake + 2,500 real)
+   - Achieves high precision and recall
+
+✅ Real-time Predictions
+   - Sub-second response time
+   - Instant feedback to users
+   - Database persistence of results
+
+✅ Production-Ready Deployment
+   - Backend running 24/7 on Railway
+   - Frontend globally distributed on Vercel CDN
+   - Automatic scaling and failover
+
+✅ Clean User Interface
+   - Three intuitive tabs (Predictor, Dashboard, History)
+   - Real-time statistics
+   - Responsive design
+
+✅ RESTful API
+   - Standard HTTP methods
+   - JSON request/response format
+   - Consistent error handling
+   - CORS enabled for cross-domain requests
+
+✅ Data Persistence
+   - All predictions saved to database
+   - Historical tracking
+   - Statistical analysis capabilities
+
+CHALLENGES & SOLUTIONS
+================================================================================
+
+1. MODEL DEPLOYMENT CHALLENGE:
+   Problem: Model training takes too long during build
+   Solution: Pre-trained models committed to Git, loaded at startup
+
+2. IMPORT ERRORS IN GUNICORN:
+   Problem: Relative imports failed in production
+   Solution: Dual import strategy (relative with absolute fallback)
+
+3. DATABASE INITIALIZATION:
+   Problem: Database not created in production
+   Solution: Initialize on first request using @app.before_request decorator
+
+4. MODEL FILES IN GITIGNORE:
+   Problem: Large model files excluded from git
+   Solution: Removed from .gitignore to enable deployment
+
+5. PYTHON DETECTION ON RAILWAY:
+   Problem: Railway detected as Node.js project
+   Solution: Added runtime.txt and requirements.txt at root level
+
+FUTURE IMPROVEMENTS
+================================================================================
+
+1. Real-time Model Updates
+   - Retrain model periodically with new data
+   - Continuous learning from user corrections
+
+2. User Authentication
+   - User accounts and login system
+   - Personalized prediction history
+
+3. Advanced Analytics
+   - Confidence score distribution charts
+   - Time-series analysis of predictions
+   - Source and author tracking
+
+4. Multi-language Support
+   - Support for non-English news
+   - Language-specific models
+
+5. Browser Extension
+   - One-click verification of news articles
+   - Integration with popular news sites
+
+6. Mobile App
+   - Native iOS and Android applications
+   - Offline prediction capabilities
+
+CONCLUSION
+================================================================================
+
+NewsRadar is a complete, production-ready fake news detection system that 
+combines modern web technologies with machine learning to help users identify 
+potentially false news. The application demonstrates:
+
+- Full-stack web development (frontend + backend)
+- Machine learning model training and deployment
+- Database design and management
+- API development and integration
+- Cloud deployment and DevOps practices
+- Responsive UI/UX design
+
+The system is deployed and live, serving real predictions with 97.6% accuracy.
+Users can access it immediately through the web interface without installation,
+making it practical and accessible for anyone wanting to verify news credibility.
+
+For more information or to contribute:
+GitHub: https://github.com/krishnarajodhiya/NewsRadar
+
+================================================================================
+                         END OF DOCUMENTATION
+================================================================================
