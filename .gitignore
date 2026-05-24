@@ -39,10 +39,6 @@ env/
 *.sqlite
 *.sqlite3
 
-# Models
-models/model.pkl
-models/vectorizer.pkl
-
 # Logs
 *.log
 logs/
