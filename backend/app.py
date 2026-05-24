@@ -56,9 +56,20 @@ def load_model():
         return False
 
 
+# Database initialization flag
+db_initialized = False
+
 @app.before_request
 def setup():
     """Setup on first request"""
+    global db_initialized
+    
+    # Initialize database once
+    if not db_initialized:
+        init_db()
+        db_initialized = True
+    
+    # Load model if not loaded
     if model is None:
         if not load_model():
             return jsonify({
