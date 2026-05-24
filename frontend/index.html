@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsVerify AI - Fake News Detection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🔍 NewsVerify AI</h1>
+                <p class="subtitle">Detect Fake News with Machine Learning</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="predictor">
+                    <span class="tab-icon">✍️</span> Predictor
+                </button>
+                <button class="tab-btn" data-tab="dashboard">
+                    <span class="tab-icon">📊</span> Dashboard
+                </button>
+                <button class="tab-btn" data-tab="history">
+                    <span class="tab-icon">📜</span> History
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="tab-content">
+                <!-- Predictor Tab -->
+                <div id="predictor" class="tab-pane active">
+                    <div class="card">
+                        <h2>Analyze News Article</h2>
+                        <p class="description">Paste your news article or headline below to detect if it's fake or real</p>
+                        
+                        <form id="predictForm" class="form">
+                            <div class="form-group">
+                                <label for="newsInput">News Article or Headline:</label>
+                                <textarea 
+                                    id="newsInput" 
+                                    class="textarea"
+                                    placeholder="Paste your news article or headline here..."
+                                    rows="6"
+                                    maxlength="5000"
+                                ></textarea>
+                                <div class="char-count">
+                                    <span id="charCount">0</span>/5000
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <span class="btn-icon">🔍</span> Analyze News
+                            </button>
+                        </form>
+
+                        <!-- Result Section -->
+                        <div id="resultSection" class="result-section hidden">
+                            <div id="resultCard" class="result-card">
+                                <!-- Result content will be inserted here -->
+                            </div>
+                        </div>
+
+                        <!-- Loading Spinner -->
+                        <div id="loadingSpinner" class="spinner hidden">
+                            <div class="spinner-ring"></div>
+                            <p>Analyzing news...</p>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div id="errorMessage" class="alert alert-error hidden"></div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-pane">
+                    <div class="card">
+                        <h2>Dashboard Statistics</h2>
+                        <div id="dashboardContent" class="dashboard-grid">
+                            <!-- Dashboard content will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div id="history" class="tab-pane">
+                    <div class="card">
+                        <div class="history-header">
+                            <h2>Prediction History</h2>
+                            <button id="clearHistoryBtn" class="btn btn-danger btn-small">
+                                <span class="btn-icon">🗑️</span> Clear History
+                            </button>
+                        </div>
+                        <div id="historyContent" class="history-list">
+                            <!-- History items will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>NewsVerify AI &copy; 2024 | Powered by Machine Learning</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "NewsVerify AI",
+  "version": "1.0.0",
+  "description": "Machine Learning Fake News Detection Web Application",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": ["fake-news", "detection", "machine-learning", "scikit-learn", "flask"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/NewsVerify-AI"
+  },
+  "project_type": "web_application",
+  "tech_stack": {
+    "backend": ["Python", "Flask", "Scikit-learn"],
+    "frontend": ["HTML5", "CSS3", "JavaScript"],
+    "database": "SQLite",
+    "ml_model": "Logistic Regression + TF-IDF"
+  },
+  "features": [
+    "News article analysis",
+    "Fake/Real prediction",
+    "Confidence scoring",
+    "Prediction history",
+    "Dashboard statistics",
+    "Responsive UI",
+    "RESTful API"
+  ]
+}
