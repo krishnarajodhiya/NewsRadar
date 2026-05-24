@@ -11,8 +11,13 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.exceptions import BadRequest
 
-from database import init_db, save_prediction, get_recent_predictions, get_total_predictions, get_stats
-from preprocessor import preprocess_text, validate_input
+# Handle imports for both direct execution and gunicorn
+try:
+    from .database import init_db, save_prediction, get_recent_predictions, get_total_predictions, get_stats
+    from .preprocessor import preprocess_text, validate_input
+except ImportError:
+    from database import init_db, save_prediction, get_recent_predictions, get_total_predictions, get_stats
+    from preprocessor import preprocess_text, validate_input
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -229,7 +234,10 @@ def clear_history():
     }
     """
     try:
-        from database import clear_predictions
+        try:
+            from .database import clear_predictions
+        except ImportError:
+            from database import clear_predictions
         clear_predictions()
         
         return jsonify({
